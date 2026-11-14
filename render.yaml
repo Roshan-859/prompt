@@ -1,5 +1,23 @@
 services:
-  # 1. FastAPI Backend Web Service
+  # 1. Frontend (Render Static Site - FREE)
+  - type: static_site
+    name: skillpilot-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: skillpilot-backend
+          property: host
+          envVarKey: VITE_API_URL
+
+  # 2. Backend (Render Web Service - Python/FastAPI)
   - type: web
     name: skillpilot-backend
     env: python
@@ -22,9 +40,11 @@ services:
         value: "true"
       - key: CORS_ORIGINS
         value: "*"
+      - key: PYTHON_VERSION
+        value: 3.11.9
 
 databases:
-  # 2. Managed PostgreSQL Database
+  # 3. PostgreSQL Database (Free Managed DB)
   - name: skillpilot-db
     plan: free
     databaseName: skillpilot
