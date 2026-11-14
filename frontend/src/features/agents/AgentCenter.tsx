@@ -63,7 +63,10 @@ export default function AgentCenter() {
     setStreamMessages([])
     setIsStreaming(true)
 
-    const es = new EventSource(`/api/v1/agents/stream/${runId}`)
+    const streamBase = import.meta.env.VITE_API_URL
+      ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api/v1/agents/stream/${runId}`
+      : `/api/v1/agents/stream/${runId}`
+    const es = new EventSource(streamBase)
     es.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)

@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// Use VITE_API_URL if provided in Vercel, otherwise fallback to local relative /api/v1
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api/v1`
+  : '/api/v1'
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -26,4 +31,3 @@ api.interceptors.response.use(
 )
 
 export default api
-
