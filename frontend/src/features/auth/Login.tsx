@@ -15,9 +15,14 @@ export default function Login() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    const trimmedEmail = email.trim().toLowerCase()
+    if (!trimmedEmail) {
+      toast.error('Please enter your email')
+      return
+    }
     setLoading(true)
     try {
-      const res = await api.post('/auth/login', { email, password })
+      const res = await api.post('/auth/login', { email: trimmedEmail, password })
       setAuth(res.data.user, res.data.access_token)
       toast.success(`Welcome, ${res.data.user.full_name}!`)
       navigate('/app/dashboard')

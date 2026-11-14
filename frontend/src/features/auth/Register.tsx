@@ -17,11 +17,16 @@ export default function Register() {
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
+    const trimmedEmail = email.trim().toLowerCase()
+    if (!trimmedEmail || !trimmedEmail.includes('@') || !trimmedEmail.includes('.')) {
+      toast.error('Please enter a valid email address (e.g. name@gmail.com)')
+      return
+    }
     setLoading(true)
     try {
       const res = await api.post('/auth/register', {
-        full_name: fullName,
-        email,
+        full_name: fullName.trim(),
+        email: trimmedEmail,
         password,
         role,
       })
